@@ -1,4 +1,9 @@
 {
-    "cashboxDirPath": "C:\\Program Files (x86)\\SKBKontur\\Cashbox",
-    "configPath": "C:\\Program Files (x86)\\SKBKontur\\Cashbox\\bin\\1.0.1755.5694\\cashboxService.config.json"
+    "cashboxPath": "C:\\Program Files (x86)\\SKBKontur\\Cashbox",
+    "configPath": "C:\\Program Files (x86)\\SKBKontur\\Cashbox\\bin\\1.0.1678.5128\\cashboxService.config.json",
+    "diskDrives": [
+        "C:\\",
+        "D:\\",
+        "F:\\"
+    ]
 }

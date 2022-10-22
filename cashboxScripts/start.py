@@ -1,5 +1,3 @@
-import os
-import shutil
 from subprocess import check_output
 
 try:
