@@ -3,7 +3,17 @@
 SendMode Input  
 SetWorkingDir %A_ScriptDir% 
 
- 
+
+!1::
+Run, setFirstStaging.py
+MsgBox, "You have switched to staging-1"
+return
+
+!2::
+Run, setSecondStaging.py
+MsgBox, "You have switched to staging-2"
+return
+
 !s:: 
 Run, stop.py
 MsgBox, "SKBKontur.Cashbox stopped"
@@ -20,22 +30,9 @@ MsgBox, "You have deleted db"
 return
 
 #k::
-Run, deleteCashBox.py
+Run, deleteCashbox.py
 MsgBox, "You have deleted KMK"
 return
 
 
-!1::
-Run, setFirstStaging.py
-MsgBox, "You have switched to staging-1"
-return
 
-!2::
-Run, setSecondStaging.py
-MsgBox, "You have switched to staging-2"
-return
-
-!c:: 
-Run, C:\ProgramData\SKBKontur\Cashbox\UIRunner\bin\1.0.1641.147\SKBKontur.Cashbox.UIRunner.exe 
-return 
- 
