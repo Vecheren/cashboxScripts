@@ -15,6 +15,9 @@ def getProgramFilesPaths():
     return paths
 
 def findCashboxPath():
+    cashboxPath = readJsonValue("cashboxPath")
+    if cashboxPath != "": 
+        return cashboxPath
     for path in getProgramFilesPaths():
         dir = findChildDirPath(path, "SKBKontur")
         if dir != "":
@@ -24,6 +27,10 @@ def findCashboxPath():
     return cashboxPath
 
 def findConfigPath():
+    configPath = readJsonValue("configPath")
+    if configPath != "":
+        log("findConfigPath", f"{configPath} is in json")
+        return configPath
     cashbox = findCashboxPath()
     bin = os.path.join(cashbox, "bin")
     for root, dirs, files in os.walk(bin):
@@ -31,11 +38,18 @@ def findConfigPath():
         break
     assert configPath != "", "Can't find config path"
     writeJsonValue("configPath", configPath)
+    log("findConfigPath", f"{configPath} is founded")
     return configPath
 
 def setStaging(stagingNumber):
     configPath = findConfigPath()
-    changeStagingInConfig(stagingNumber, configPath)
+    try: 
+        changeStagingInConfig(stagingNumber, configPath)
+    except FileNotFoundError: # на случай, если удаляли кассу не скриптом
+        log("setStaging", f"json property not found")
+        writeJsonValue("configPath", "")
+        configPath = findConfigPath()
+        changeStagingInConfig(stagingNumber, configPath)
 
 def changeStagingInConfig(stagingNumber, configPath):
     with open(configPath, "r+") as file:
@@ -43,12 +57,15 @@ def changeStagingInConfig(stagingNumber, configPath):
         data = json.loads(rawJson)
         if stagingNumber == 2:
             data["settings"][0]["loyaltyCashboxClientUrl"] = "https://market-dev.testkontur.ru/loyaltyCashboxApi"
+            log("changeStagingInConfig", "set up staging 2")
         else: 
             data["settings"][0]["loyaltyCashboxClientUrl"] = "https://market.testkontur.ru/loyaltyCashboxApi"
+            log("changeStagingInConfig", "set up staging 1")
         newJson = json.dumps(data, indent=4)
         file.seek(0)
         file.write(newJson)
         file.truncate()    
+
 
 def findChildDirPath(path, dir):
     for root, dirs, files in os.walk(path):
@@ -73,3 +90,11 @@ def readJsonValue(key, path = "data.json"):
         data = json.loads(rawJson)
         assert key in data, f"Key {key} not in {path}"
         return data[key]
+
+def log(method, result):
+    writeJsonValue(method, result, "log.txt")
+
+log("main", "main started")
+setStaging(1)
+log("main", "main finished")
+
