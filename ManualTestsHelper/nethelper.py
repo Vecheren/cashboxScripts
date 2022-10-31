@@ -12,7 +12,7 @@ def startSession():
 def genToken(session: requests.Session, cashboxId):
     session.headers['Content-Type'] = "application/json"
     url = f"https://market.testkontur.ru:443/cashboxApi/backend/v1/cashbox/{cashboxId}/resetPassword"
-    for i in range(5):
+    for i in range(10):
         token = str(random.randrange(11111111, 99999999))
         pyperclip.copy(f"{token}")
         data = json.dumps({"Token" : token})
@@ -22,6 +22,12 @@ def genToken(session: requests.Session, cashboxId):
 def getCashoxSettingsJson (session: requests.Session, cashboxId):
     response = session.get(f'https://market.testkontur.ru:443/cashboxApi/backend/v1/cashbox/{cashboxId}/settings')
     return json.loads(response.text)
+
+def postCashboxSettings(session: requests.Session, cashboxId, json):
+    session.headers['Content-Type'] = "application/json"
+    url = f"https://market.testkontur.ru:443/cashboxApi/backend/v1/cashbox/{cashboxId}/settings/backend"
+    result = session.post(url, data = json)
+    print("")
 
 def getSavedCashboxName(session: requests.Session, cashboxId):
     backendSettings = getCashoxSettingsJson(session, cashboxId)['settings']['backendSettings']

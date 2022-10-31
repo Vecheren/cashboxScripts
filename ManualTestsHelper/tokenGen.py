@@ -1,6 +1,6 @@
 import nethelper
-import helper
+import fileshelper
 
-cashboxId = helper.readJsonValue("cashboxId")
+cashboxId = fileshelper.readJsonValue("cashboxId")
 session = nethelper.startSession()
 nethelper.genToken(session, cashboxId)
