@@ -1,3 +1,3 @@
-from subprocess import check_output
+import subprocess
 
-check_output("net stop SKBKontur.Cashbox", shell=True)
+subprocess.call(['sc', 'stop', 'SKBKontur.Cashbox'])

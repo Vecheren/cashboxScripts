@@ -1,7 +1,7 @@
-from subprocess import check_output
 from helpers import fileshelper
+import subprocess
 
-check_output("net stop SKBKontur.Cashbox", shell=True)
+subprocess.call(['sc', 'stop', 'SKBKontur.Cashbox'])
 cashboxPath = fileshelper.findCashboxPath()
 fileshelper.deleteFolder(cashboxPath)
 fileshelper.writeJsonValue("configPath", "")
