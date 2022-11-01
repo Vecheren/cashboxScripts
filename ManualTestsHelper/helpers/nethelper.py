@@ -28,9 +28,16 @@ def postCashboxSettings(session: requests.Session, cashboxId, settings):
     session.headers['Content-Type'] = "application/json"
     session.headers['Accept'] = "application/json"
     url = f"https://market.testkontur.ru:443/cashboxApi/backend/v1/cashbox/{cashboxId}/settings/backend"
-    settings = json.dumps(settings)
-    session.post(url, data = settings)
+    session.post(url, data = json.dumps(settings))
 
+def prepareFlippedRemainsSettings(settings):
+    settings = json.loads(settings)
+    moveRemainsToNextShift = settings["settings"]["backendSettings"]["moveRemainsToNextShift"]
+    settings["settings"]["backendSettings"]["moveRemainsToNextShift"] = False if moveRemainsToNextShift == True else True
+    result = {}
+    result["settings"] = settings["settings"]["backendSettings"]
+    result["previousVersion"] = settings["versions"]["backendVersion"]
+    return result
 
 def getSavedCashboxName(session: requests.Session, cashboxId):
     backendSettings = getCashoxSettingsJson(session, cashboxId)['settings']['backendSettings']

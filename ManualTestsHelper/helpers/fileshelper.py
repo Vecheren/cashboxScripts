@@ -57,7 +57,7 @@ def findChildDirPath(path, dir):
         break 
     return "" 
 
-def writeJsonValue(key, value, path = "data.json"):
+def writeJsonValue(key, value, path = os.path.join("helpers", "data.json")):
     with open(path, "r+") as file:
         rawJson = file.read()
         data = json.loads(rawJson)
@@ -67,7 +67,7 @@ def writeJsonValue(key, value, path = "data.json"):
         file.write(newJson)
         file.truncate()
 
-def readJsonValue(key, path = "data.json"):
+def readJsonValue(key, path = os.path.join("helpers", "data.json")):
     with open(path, "r") as file:
         rawJson = file.read()
         data = json.loads(rawJson)
