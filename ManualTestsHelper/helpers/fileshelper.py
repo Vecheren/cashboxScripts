@@ -1,7 +1,19 @@
 import os
 import shutil
 import json
-from subprocess import check_output
+import subprocess 
+
+def stopCashbox():
+    try:
+        subprocess.call(['sc', 'stop', 'SKBKontur.Cashbox'])
+    except:
+        pass
+
+def startCashbox():
+    try:
+        subprocess.call(['sc', 'stop', 'SKBKontur.Cashbox'])
+    except:
+        pass
 
 def deleteFolder(filePath):
     assert os.path.isdir(filePath)

@@ -1,3 +1,3 @@
-import subprocess
+from helpers import fileshelper
 
-subprocess.call(['sc', 'start', 'SKBKontur.Cashbox'])
+fileshelper.startCashbox()

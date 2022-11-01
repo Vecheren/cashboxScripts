@@ -1,3 +1,3 @@
-import subprocess
+from helpers import fileshelper
 
-subprocess.call(['sc', 'stop', 'SKBKontur.Cashbox'])
+fileshelper.stopCashbox()
