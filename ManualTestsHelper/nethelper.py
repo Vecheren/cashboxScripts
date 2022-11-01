@@ -20,14 +20,17 @@ def genToken(session: requests.Session, cashboxId):
         if result.ok: break
 
 def getCashoxSettingsJson (session: requests.Session, cashboxId):
+    session.headers['Accept'] = "application/json"
     response = session.get(f'https://market.testkontur.ru:443/cashboxApi/backend/v1/cashbox/{cashboxId}/settings')
-    return json.loads(response.text)
+    return response.content
 
-def postCashboxSettings(session: requests.Session, cashboxId, json):
+def postCashboxSettings(session: requests.Session, cashboxId, settings):
     session.headers['Content-Type'] = "application/json"
+    session.headers['Accept'] = "application/json"
     url = f"https://market.testkontur.ru:443/cashboxApi/backend/v1/cashbox/{cashboxId}/settings/backend"
-    result = session.post(url, data = json)
-    print("")
+    settings = json.dumps(settings)
+    session.post(url, data = settings)
+
 
 def getSavedCashboxName(session: requests.Session, cashboxId):
     backendSettings = getCashoxSettingsJson(session, cashboxId)['settings']['backendSettings']
