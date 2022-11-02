@@ -14,18 +14,28 @@ ManualTestsHelper - скрипты, которые автоматизируют 
 После запуска файла .ahk можно нажимать на горячие клавиши.
 
 Остановка службы SKBKontur.Cashbox - ALT + стрелка вниз
+
 Запуск службы SKBKontur.Cashbox - ALT + стрелка вверх
+
 Удаление базы данных кассы - ALT + D
+
 Удаление кассы - ALT + C
+
 Генерация нового токена - ALT + T
+
 Переключение на стейджинг-1 - ALT + 1
+
 Переключение на стейджинг-2 - ALT + 2
+
 Изменение настройки переноса остатков - ALT + O
 
 Также работает автозамена строк. Просто напишите ключ где угодно, например, в строке браузера - подставится значение:
 adm1 - https://market.testkontur.ru/AdminTools
+
 adm2 - https://market-dev.testkontur.ru/AdminTools
+
 cashdoc - https://cashdoc.kontur/webdav/cashbox/
+
 csadm - https://market.kontur.ru/cashboxApi/admin/web/cashbox/
 
 
