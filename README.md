@@ -35,5 +35,6 @@ ManualTestsHelper - скрипты, которые автоматизируют 
 :white_check_mark: csadm - https://market.kontur.ru/cashboxApi/admin/web/cashbox/
 
 
+
 :cat: *Расширяйте набор скриптов и горячих клавиш по аналогии и подстраивайте их под себя. Или хотя бы расказывайте, чего не хватает :)* 
 
