@@ -1,7 +1,19 @@
 import os
 import shutil
 import json
-from subprocess import check_output
+import subprocess 
+
+def stopCashbox():
+    try:
+        subprocess.call(['sc', 'stop', 'SKBKontur.Cashbox'])
+    except:
+        pass
+
+def startCashbox():
+    try:
+        subprocess.call(['sc', 'stop', 'SKBKontur.Cashbox'])
+    except:
+        pass
 
 def deleteFolder(filePath):
     assert os.path.isdir(filePath)
@@ -57,7 +69,7 @@ def findChildDirPath(path, dir):
         break 
     return "" 
 
-def writeJsonValue(key, value, path = "data.json"):
+def writeJsonValue(key, value, path = os.path.join("helpers", "data.json")):
     with open(path, "r+") as file:
         rawJson = file.read()
         data = json.loads(rawJson)
@@ -67,7 +79,7 @@ def writeJsonValue(key, value, path = "data.json"):
         file.write(newJson)
         file.truncate()
 
-def readJsonValue(key, path = "data.json"):
+def readJsonValue(key, path = os.path.join("helpers", "data.json")):
     with open(path, "r") as file:
         rawJson = file.read()
         data = json.loads(rawJson)

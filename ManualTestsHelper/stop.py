@@ -1,3 +1,3 @@
-from subprocess import check_output
+from helpers import fileshelper
 
-check_output("net stop SKBKontur.Cashbox", shell=True)
+fileshelper.stopCashbox()

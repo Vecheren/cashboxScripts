@@ -1,10 +1,7 @@
-from subprocess import check_output
-import fileshelper
+from helpers import fileshelper
+import subprocess
 
-try:
-    check_output("net stop SKBKontur.Cashbox", shell=True)
-except:
-    pass
+fileshelper.stopCashbox()
 cashboxPath = fileshelper.findCashboxPath()
 fileshelper.deleteFolder(cashboxPath)
 fileshelper.writeJsonValue("configPath", "")

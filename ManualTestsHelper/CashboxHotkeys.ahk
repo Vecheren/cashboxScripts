@@ -4,6 +4,11 @@ SendMode Input
 SetWorkingDir %A_ScriptDir% 
 
 
+!o::
+Run, flipRemainsSettings.py
+MsgBox, "Вы изменили настройку переноса остатков"
+return
+
 !Up:: 
 Run, start.py
 MsgBox, "Служба SKBKontur.Cashbox запущена"

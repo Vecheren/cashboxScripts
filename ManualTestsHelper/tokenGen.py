@@ -1,5 +1,5 @@
-import nethelper
-import fileshelper
+from helpers import nethelper
+from helpers import fileshelper
 
 cashboxId = fileshelper.readJsonValue("cashboxId")
 session = nethelper.startSession()
