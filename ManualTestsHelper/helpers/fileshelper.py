@@ -3,6 +3,7 @@ import shutil
 import json
 import subprocess 
 import sqlite3
+import time
 
 def getCashboxId():
     dbPath = os.path.join(findCashboxPath(), "db", "db.db")
@@ -15,34 +16,21 @@ def getCashboxId():
         record = cursor.fetchall()
         cashboxId = record[0][1]
         cursor.close()
-        writeJsonValue("cashboxId", cashboxId)
+        # writeJsonValue("cashboxId", cashboxId)
         connect.close()
     except:
         cashboxId = readJsonValue("cashboxId")
+    finally:
+        if cashboxId == None:
+            cashboxId = readJsonValue("cashboxId")
     return cashboxId
-
-def stopCashbox():
-    try:
-        subprocess.call(['sc', 'stop', 'SKBKontur.Cashbox'])
-    except:
-        pass
-
-def startCashbox():
-    try:
-        subprocess.call(['sc', 'stop', 'SKBKontur.Cashbox'])
-    except:
-        pass
 
 def deleteFolder(filePath):
     assert os.path.isdir(filePath)
+    stopCashbox()
+    subprocess.call(["taskkill", "/f", "/im", "DB Browser for SQLite.exe"])
+    time.sleep(2)
     shutil.rmtree(filePath)
-
-def getProgramFilesPaths():
-    paths = []
-    for diskDrive in readJsonValue("diskDrives"):
-        paths.append(os.path.join(diskDrive, "Program Files"))
-        paths.append(os.path.join(diskDrive, "Program Files (x86)"))
-    return paths
 
 def findCashboxPath():
     for path in getProgramFilesPaths():
@@ -50,7 +38,6 @@ def findCashboxPath():
         if dir != "":
             cashboxPath = os.path.join(path, "SKBKontur", "Cashbox")   
     assert cashboxPath != "", "Can't find Cashbox. Try to add your Disk Drive names to data.json" 
-    writeJsonValue("cashboxPath", cashboxPath)
     return cashboxPath
 
 def findConfigPath():
@@ -78,7 +65,19 @@ def changeStagingInConfig(stagingNumber, configPath):
         newJson = json.dumps(data, indent=4)
         file.seek(0)
         file.write(newJson)
-        file.truncate()    
+        file.truncate()   
+
+def stopCashbox():
+    try:
+        subprocess.call(['sc', 'stop', 'SKBKontur.Cashbox'])
+    except:
+        pass
+
+def startCashbox():
+    try:
+        subprocess.call(['sc', 'start', 'SKBKontur.Cashbox'])
+    except:
+        pass
 
 def findChildDirPath(path, dir):
     for root, dirs, files in os.walk(path):
@@ -86,6 +85,13 @@ def findChildDirPath(path, dir):
             return os.path.join(root, dir)
         break 
     return "" 
+
+def getProgramFilesPaths():
+    paths = []
+    for diskDrive in readJsonValue("diskDrives"):
+        paths.append(os.path.join(diskDrive, "Program Files"))
+        paths.append(os.path.join(diskDrive, "Program Files (x86)"))
+    return paths
 
 def writeJsonValue(key, value, path = os.path.join("helpers", "data.json")):
     with open(path, "r+") as file:

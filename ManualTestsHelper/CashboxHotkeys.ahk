@@ -5,7 +5,7 @@ SetWorkingDir %A_ScriptDir%
 
 
 !i::
-Run, copyCashboxId.py
+Run, copyThisCashboxId.py
 MsgBox, "В вашем буфере обмена — текущий cashboxId"
 return
 
