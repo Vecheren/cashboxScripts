@@ -4,6 +4,11 @@ SendMode Input
 SetWorkingDir %A_ScriptDir% 
 
 
+!i::
+Run, copyCashboxId.py
+MsgBox, "В вашем буфере обмена — текущий cashboxId"
+return
+
 !o::
 Run, flipRemainsSettings.py
 MsgBox, "Вы изменили настройку переноса остатков"

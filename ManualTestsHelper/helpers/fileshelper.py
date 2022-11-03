@@ -2,6 +2,24 @@ import os
 import shutil
 import json
 import subprocess 
+import sqlite3
+
+def getCashboxId():
+    dbPath = os.path.join(findCashboxPath(), "db", "db.db")
+    cashboxId = ""
+    try:
+        connect = sqlite3.connect(dbPath)
+        cursor = connect.cursor()
+        query = "select * FROM CashboxState"
+        cursor.execute(query)
+        record = cursor.fetchall()
+        cashboxId = record[0][1]
+        cursor.close()
+        writeJsonValue("cashboxId", cashboxId)
+        connect.close()
+    except:
+        cashboxId = readJsonValue("cashboxId")
+    return cashboxId
 
 def stopCashbox():
     try:
