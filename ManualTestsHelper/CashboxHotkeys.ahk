@@ -1,8 +1,13 @@
 ﻿#NoEnv  
 #Warn  
 SendMode Input  
-SetWorkingDir %A_ScriptDir% 
+SetWorkingDir, C:\Users\veche\OneDrive\Desktop\cashboxScripts\ManualTestsHelper
 
+
+!-::
+Run, set24HoursShift.py
+MsgBox, "Теперь текущая смена больше 24 часов"
+return
 
 !i::
 Run, copyThisCashboxId.py

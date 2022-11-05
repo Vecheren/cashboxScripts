@@ -5,30 +5,46 @@ import subprocess
 import sqlite3
 import time
 
+def setDbConnection():
+    stopCashbox()
+    closeSQLite()
+    return sqlite3.connect(os.path.join(findCashboxPath(), "db", "db.db"))
+
 def getCashboxId():
-    dbPath = os.path.join(findCashboxPath(), "db", "db.db")
-    cashboxId = ""
+    con = setDbConnection()
+    cur = con.cursor()
+    cur.execute("select * FROM CashboxState")
+    cashboxId = cur.fetchall()[0][1]
+    con.close()
+    return cashboxId if cashboxId !=None else readJsonValue("cashboxId")
+
+def getLastShiftFromSQL():
+    con = setDbConnection()
+    cur = con.cursor()
+    cur.execute("SELECT Content FROM(SELECT Content, OpeningDateTime, MAX(OpeningDateTime) as lastShiftDate FROM shift) Where OpeningDateTime == lastShiftDate")
+    shift = cur.fetchone()[0] 
+    con.close()
+    return shift
+
+def editShiftInDB(content : str):
+    con = sqlite3.connect(os.path.join(findCashboxPath(), "db", "db.db"))
+    cur = con.cursor()
+    query = f"Update shift set Content = '{content}' Where OpeningDateTime == (select MAX(OpeningDateTime) as lastShiftDate FROM shift)"
+    cur.execute(query)
+    con.commit()
+    con.close
+    # в итоге русские символы в БД в виде юникода, а не UTF-8. Но это не страшно, они нормально отображаются
+
+def closeSQLite(): 
     try:
-        connect = sqlite3.connect(dbPath)
-        cursor = connect.cursor()
-        query = "select * FROM CashboxState"
-        cursor.execute(query)
-        record = cursor.fetchall()
-        cashboxId = record[0][1]
-        cursor.close()
-        # writeJsonValue("cashboxId", cashboxId)
-        connect.close()
+        subprocess.call(["taskkill", "/f", "/im", "DB Browser for SQLite.exe"])
     except:
-        cashboxId = readJsonValue("cashboxId")
-    finally:
-        if cashboxId == None:
-            cashboxId = readJsonValue("cashboxId")
-    return cashboxId
+        pass
 
 def deleteFolder(filePath):
     assert os.path.isdir(filePath)
     stopCashbox()
-    subprocess.call(["taskkill", "/f", "/im", "DB Browser for SQLite.exe"])
+    closeSQLite()
     time.sleep(2)
     shutil.rmtree(filePath)
 
