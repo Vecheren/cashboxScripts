@@ -16,7 +16,10 @@ def getCashboxId():
     cur.execute("select * FROM CashboxState")
     cashboxId = cur.fetchall()[0][1]
     con.close()
-    return cashboxId if cashboxId !=None else readJsonValue("cashboxId")
+    if cashboxId == None: 
+        return readJsonValue("cashboxId")
+    writeJsonValue("cashboxId", cashboxId)
+    return cashboxId
 
 def getLastShiftFromSQL():
     con = setDbConnection()
@@ -32,8 +35,7 @@ def editShiftInDB(content : str):
     query = f"Update shift set Content = '{content}' Where OpeningDateTime == (select MAX(OpeningDateTime) as lastShiftDate FROM shift)"
     cur.execute(query)
     con.commit()
-    con.close
-    # в итоге русские символы в БД в виде юникода, а не UTF-8. Но это не страшно, они нормально отображаются
+    con.close()
 
 def closeSQLite(): 
     try:
@@ -43,8 +45,8 @@ def closeSQLite():
 
 def deleteFolder(filePath):
     assert os.path.isdir(filePath)
-    stopCashbox()
     closeSQLite()
+    stopCashbox()
     time.sleep(2)
     shutil.rmtree(filePath)
 
@@ -92,6 +94,7 @@ def stopCashbox():
 def startCashbox():
     try:
         subprocess.call(['sc', 'start', 'SKBKontur.Cashbox'])
+        time.sleep(3)
     except:
         pass
 
