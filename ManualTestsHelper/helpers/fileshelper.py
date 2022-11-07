@@ -24,15 +24,15 @@ def getCashboxId():
 def getLastShiftFromSQL():
     con = setDbConnection()
     cur = con.cursor()
-    cur.execute("SELECT Content FROM(SELECT Content, OpeningDateTime, MAX(OpeningDateTime) as lastShiftDate FROM shift) Where OpeningDateTime == lastShiftDate")
+    cur.execute("SELECT Content FROM(SELECT Content, Number, MAX(Number) as maxNumber FROM shift) Where Number == maxNumber")
     shift = cur.fetchone()[0] 
     con.close()
     return shift
 
 def editShiftInDB(content : str):
-    con = sqlite3.connect(os.path.join(findCashboxPath(), "db", "db.db"))
+    con = setDbConnection()
     cur = con.cursor()
-    query = f"Update shift set Content = '{content}' Where OpeningDateTime == (select MAX(OpeningDateTime) as lastShiftDate FROM shift)"
+    query = f"Update shift set Content = '{content}' Where Number == (select MAX(Number) FROM shift)"
     cur.execute(query)
     con.commit()
     con.close()
@@ -88,6 +88,7 @@ def changeStagingInConfig(stagingNumber, configPath):
 def stopCashbox():
     try:
         subprocess.call(['sc', 'stop', 'SKBKontur.Cashbox'])
+        time.sleep(1)
     except:
         pass
 
