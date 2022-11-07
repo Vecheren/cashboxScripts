@@ -4,6 +4,11 @@ SendMode Input
 SetWorkingDir, C:\Users\veche\OneDrive\Desktop\cashboxScripts\ManualTestsHelper
 
 
+!p::
+Run, setCashboxIdFromClipboard.py
+MsgBox, "Вы вставили cashboxId из буфера в data.json"
+return
+
 !-::
 Run, set24HoursShift.py
 MsgBox, "Теперь текущая смена больше 24 часов"
