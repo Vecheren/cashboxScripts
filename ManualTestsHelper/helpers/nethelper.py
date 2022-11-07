@@ -22,7 +22,7 @@ def genToken(session: requests.Session, cashboxId):
 def getCashoxSettingsJson (session: requests.Session, cashboxId):
     session.headers['Accept'] = "application/json"
     response = session.get(f'https://market.testkontur.ru:443/cashboxApi/backend/v1/cashbox/{cashboxId}/settings')
-    return response.content
+    return json.loads(response.content)
 
 def postCashboxSettings(session: requests.Session, cashboxId, settings):
     session.headers['Content-Type'] = "application/json"
@@ -30,12 +30,10 @@ def postCashboxSettings(session: requests.Session, cashboxId, settings):
     url = f"https://market.testkontur.ru:443/cashboxApi/backend/v1/cashbox/{cashboxId}/settings/backend"
     session.post(url, data = json.dumps(settings))
 
-def prepareFlippedRemainsSettings(settings):
-    settings = json.loads(settings)
-    moveRemainsToNextShift = settings["settings"]["backendSettings"]["moveRemainsToNextShift"]
-    settings["settings"]["backendSettings"]["moveRemainsToNextShift"] = False if moveRemainsToNextShift == True else True
+def flipBoolSettings(settings, settingsName = "moveRemainsToNextShift", settingsType = "backendSettings"):
+    settings["settings"][settingsType][settingsName] = not settings["settings"][settingsType][settingsName]
     result = {}
-    result["settings"] = settings["settings"]["backendSettings"]
+    result["settings"] = settings["settings"][settingsType]
     result["previousVersion"] = settings["versions"]["backendVersion"]
     return result
 
