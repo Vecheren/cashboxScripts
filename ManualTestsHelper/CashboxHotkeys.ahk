@@ -1,8 +1,12 @@
 ﻿#NoEnv  
 #Warn  
 SendMode Input  
-SetWorkingDir, C:\Users\veche\OneDrive\Desktop\cashboxScripts\ManualTestsHelper
+SetWorkingDir %A_ScriptDir%
 
+!,::
+Run, makeLastReceiptRegError.py
+MsgBox, "Последний чек продажи стал незареганным"
+return
 
 !p::
 Run, setCashboxIdFromClipboard.py

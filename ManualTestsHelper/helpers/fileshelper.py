@@ -4,6 +4,18 @@ import json
 import subprocess 
 import sqlite3
 import time
+import uuid
+
+def getLastReceipt(con : sqlite3.Connection):
+    cur = con.cursor()
+    cur.execute("select * from Receipt")
+    return cur.fetchall()[-1] #id, shiftid, number, content
+
+def updateReceiptContent(con : sqlite3.Connection, content, id):
+    query = f"UPDATE Receipt SET Content = '{content}' WHERE Id == '{id}'"
+    cur = con.cursor()
+    cur.execute(query)
+    con.commit()
 
 def setDbConnection():
     stopCashbox()
@@ -21,21 +33,17 @@ def getCashboxId():
     writeJsonValue("cashboxId", cashboxId)
     return cashboxId
 
-def getLastShiftFromSQL():
-    con = setDbConnection()
+def getLastShiftFromSQL(con : sqlite3.Connection):
     cur = con.cursor()
-    cur.execute("SELECT Content FROM(SELECT Content, Number, MAX(Number) as maxNumber FROM shift) Where Number == maxNumber")
+    cur.execute("SELECT Content FROM shift WHERE Number == (SELECT Max(Number) FROM shift)")
     shift = cur.fetchone()[0] 
-    con.close()
     return shift
 
-def editShiftInDB(content : str):
-    con = setDbConnection()
+def editShiftInDB(con : sqlite3.Connection, content : str):
     cur = con.cursor()
-    query = f"Update shift set Content = '{content}' Where Number == (select MAX(Number) FROM shift)"
+    query = f"UPDATE shift SET Content = '{content}' WHERE Number == (SELECT MAX(Number) FROM shift)"
     cur.execute(query)
     con.commit()
-    con.close()
 
 def closeSQLite(): 
     try:
@@ -95,7 +103,7 @@ def stopCashbox():
 def startCashbox():
     try:
         subprocess.call(['sc', 'start', 'SKBKontur.Cashbox'])
-        time.sleep(3)
+        time.sleep(4)
     except:
         pass
 
